@@ -1,195 +1,153 @@
 import React, { useState } from 'react';
 import { 
-  Menu, Plus, Search, Settings, FileText, 
-  Layout, MoreHorizontal, ChevronRight, 
-  CheckSquare, Image as ImageIcon, Smile
+  Play, Send, CheckCircle, AlertCircle, 
+  Clock, GitCommit, MessageSquare, Terminal, FileCode
 } from 'lucide-react';
 
-const NotionClone = () => {
-  const [activePage, setActivePage] = useState('doc');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+const CodingAssignmentUI = () => {
+  // 상태 관리: 'editing' (작성 중) | 'checking' (제출 전 검사) | 'feedback' (결과 확인)
+  const [step, setStep] = useState('editing');
 
-  // 더미 데이터: 사이드바 페이지 목록
-  const pages = [
-    { id: 'doc', title: 'UX/UI 설계 가이드', icon: <FileText size={18} /> },
-    { id: 'board', title: '프론트엔드 개발 칸반', icon: <Layout size={18} /> },
-    { id: 'tasks', title: '개인 할 일 목록', icon: <CheckSquare size={18} /> },
-  ];
-
-  // 더미 데이터: 칸반 보드 상태
-  const boardColumns = [
-    { title: '시작 전', tasks: ['컴포넌트 구조 설계', 'Tailwind 세팅'] },
-    { title: '진행 중', tasks: ['사이드바 UI 구현', '에디터 블록 상태 관리'] },
-    { title: '완료', tasks: ['요구사항 명세서 작성', '와이어프레임 기획'] },
-  ];
+  // 제출 시뮬레이션 함수
+  const handleSubmit = () => {
+    setStep('checking');
+    setTimeout(() => {
+      setStep('feedback');
+    }, 2000); // 2초 후 피드백 화면으로 전환
+  };
 
   return (
-    <div className="flex h-screen bg-white text-gray-800 font-sans">
+    <div className="flex h-screen bg-[#0d1117] text-gray-300 font-sans">
       
-      {/* 사이드바 영역 */}
-      {sidebarOpen && (
-        <div className="w-64 bg-[#f7f7f5] border-r border-gray-200 flex flex-col transition-all duration-300">
-          {/* 워크스페이스 헤더 */}
-          <div className="flex items-center justify-between p-4 hover:bg-gray-200 cursor-pointer transition-colors">
-            <div className="flex items-center gap-2 font-semibold text-sm">
-              <div className="w-5 h-5 bg-blue-500 rounded text-white flex items-center justify-center text-xs">J</div>
-              진희님의 워크스페이스
-            </div>
-            <ChevronRight size={16} className="text-gray-500" />
+      {/* 1. 좌측: 과제 상세 영역 (Split-Pane 40%) */}
+      <div className="w-2/5 border-r border-gray-800 flex flex-col bg-[#0d1117]">
+        <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+          <div className="flex items-center gap-2 text-blue-400 text-sm font-semibold mb-2">
+            <Terminal size={16} />
+            <span>Algorithm Task #42</span>
           </div>
+          <h1 className="text-2xl font-bold text-white mb-4">이진 탐색 트리 (BST) 검증하기</h1>
+          
+          <div className="space-y-6 text-sm leading-relaxed text-gray-400">
+            <p>
+              주어진 이진 트리가 유효한 이진 탐색 트리(Binary Search Tree)인지 확인하는 함수를 작성하세요.
+            </p>
+            
+            <div className="bg-[#161b22] p-4 rounded-lg border border-gray-800">
+              <h3 className="text-white font-medium mb-2">제한 사항</h3>
+              <ul className="list-disc list-inside space-y-1">
+                <li>트리의 노드 수는 1개 이상 10^4개 이하입니다.</li>
+                <li>-2^31 &lt;= Node.val &lt;= 2^31 - 1</li>
+                <li>시간 복잡도 $O(N)$을 만족해야 합니다.</li>
+              </ul>
+            </div>
 
-          {/* 빠른 메뉴 */}
-          <div className="px-2 pb-4 space-y-1 text-sm text-gray-600">
-            <div className="flex items-center gap-2 p-2 hover:bg-gray-200 rounded cursor-pointer">
-              <Search size={18} /> 검색
-            </div>
-            <div className="flex items-center gap-2 p-2 hover:bg-gray-200 rounded cursor-pointer">
-              <Settings size={18} /> 설정 및 멤버
-            </div>
-            <div className="flex items-center gap-2 p-2 hover:bg-gray-200 rounded cursor-pointer">
-              <Plus size={18} /> 새 페이지
-            </div>
-          </div>
-
-          {/* 페이지 목록 */}
-          <div className="flex-1 overflow-y-auto px-2">
-            <div className="text-xs font-semibold text-gray-500 px-2 mb-2">개인 페이지</div>
-            {pages.map((page) => (
-              <div 
-                key={page.id}
-                onClick={() => setActivePage(page.id)}
-                className={`flex items-center gap-2 p-2 rounded cursor-pointer text-sm mb-1 ${activePage === page.id ? 'bg-gray-200 font-medium' : 'hover:bg-gray-200'}`}
-              >
-                {page.icon}
-                <span>{page.title}</span>
+            <div>
+              <h3 className="text-white font-medium mb-2">입출력 예시</h3>
+              <div className="bg-[#161b22] p-3 rounded font-mono text-xs border border-gray-800">
+                <span className="text-gray-500">Input:</span> root = [2,1,3]<br/>
+                <span className="text-gray-500">Output:</span> true
               </div>
-            ))}
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* 메인 콘텐츠 영역 */}
-      <div className="flex-1 flex flex-col overflow-hidden relative">
-        {/* 상단 네비게이션 */}
-        <div className="h-12 flex items-center justify-between px-4 sticky top-0 bg-white/80 backdrop-blur-sm z-10">
-          <div className="flex items-center gap-2">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 hover:bg-gray-100 rounded">
-              <Menu size={20} className="text-gray-500" />
-            </button>
-            <div className="text-sm text-gray-600 flex items-center gap-2">
-              진희님의 워크스페이스 <span className="text-gray-300">/</span> 
-              {pages.find(p => p.id === activePage)?.title}
-            </div>
+      {/* 2. 우측: 에디터 및 피드백 영역 (Split-Pane 60%) */}
+      <div className="flex-1 flex flex-col bg-[#1e1e1e] relative">
+        
+        {/* 상단 툴바 및 버전 타임라인 */}
+        <div className="h-12 bg-[#161b22] border-b border-gray-800 flex items-center justify-between px-4">
+          <div className="flex items-center gap-2 text-sm">
+            <FileCode size={16} className="text-yellow-400" />
+            <span className="text-gray-300 font-mono">solution.js</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500 hover:text-gray-800 cursor-pointer">공유</span>
-            <MoreHorizontal size={20} className="text-gray-500 cursor-pointer hover:text-gray-800" />
+          
+          {/* 버전 타임라인 (미니) */}
+          <div className="flex items-center gap-3 text-xs">
+            <div className="flex items-center gap-1 text-gray-500 hover:text-gray-300 cursor-pointer">
+              <GitCommit size={14} /> v1 (컴파일 에러)
+            </div>
+            <div className="h-px w-4 bg-gray-700"></div>
+            <div className="flex items-center gap-1 text-blue-400 font-medium cursor-pointer">
+              <GitCommit size={14} /> v2 (현재)
+            </div>
           </div>
         </div>
 
-        {/* 페이지 콘텐츠 (스크롤 영역) */}
-        <div className="flex-1 overflow-y-auto pb-32">
-          {/* 커버 이미지 플레이스홀더 */}
-          <div className="h-48 bg-gradient-to-r from-blue-100 to-purple-100 w-full group relative">
-            <button className="absolute bottom-4 right-4 bg-white/80 px-3 py-1.5 rounded text-sm text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
-              커버 변경
-            </button>
+        {/* 메인 에디터 영역 */}
+        <div className="flex-1 p-4 font-mono text-sm overflow-y-auto">
+          {/* 코드 라인 1 */}
+          <div className="flex hover:bg-[#2d2d2d] py-1">
+            <div className="w-8 text-right pr-4 text-gray-600 select-none">1</div>
+            <div className="text-blue-400">function <span className="text-yellow-200">isValidBST</span><span className="text-gray-300">(root) {"{"}</span></div>
+          </div>
+          
+          {/* 코드 라인 2 */}
+          <div className="flex hover:bg-[#2d2d2d] py-1">
+            <div className="w-8 text-right pr-4 text-gray-600 select-none">2</div>
+            <div className="text-gray-300 pl-4">return <span className="text-yellow-200">validate</span>(root, -Infinity, Infinity);</div>
           </div>
 
-          <div className="max-w-4xl mx-auto px-12 pt-12">
-            {/* 페이지 아이콘 및 도구 */}
-            <div className="relative -mt-20 mb-6">
-              <div className="text-6xl bg-white w-20 h-20 flex items-center justify-center rounded-lg shadow-sm border border-gray-100">
-                {activePage === 'doc' ? '📝' : activePage === 'board' ? '📋' : '✅'}
-              </div>
-            </div>
-
-            <div className="flex gap-4 text-gray-400 text-sm mb-4">
-              <button className="flex items-center gap-1 hover:text-gray-600 hover:bg-gray-100 px-2 py-1 rounded transition-colors"><ImageIcon size={16}/> 커버 추가</button>
-              <button className="flex items-center gap-1 hover:text-gray-600 hover:bg-gray-100 px-2 py-1 rounded transition-colors"><Smile size={16}/> 아이콘 추가</button>
-            </div>
-
-            {/* 에디터 뷰 */}
-            {activePage === 'doc' && (
-              <div className="space-y-4">
-                <input 
-                  type="text" 
-                  defaultValue="UX/UI 설계 가이드" 
-                  className="w-full text-4xl font-bold text-gray-900 placeholder-gray-300 focus:outline-none bg-transparent mb-6"
-                  placeholder="제목 없음"
-                />
-                
-                {/* 블록 에디터 흉내 */}
-                <div className="group flex items-start gap-2">
-                  <div className="w-6 flex flex-col items-center opacity-0 group-hover:opacity-100 cursor-pointer mt-1 text-gray-400">
-                    <Plus size={18} />
-                  </div>
-                  <p className="flex-1 text-gray-700 leading-relaxed outline-none" contentEditable suppressContentEditableWarning>
-                    이 페이지는 노션 스타일의 에디터를 구현한 프로토타입입니다. 클릭하여 텍스트를 수정해 보세요.
-                  </p>
-                </div>
-
-                <div className="group flex items-start gap-2">
-                  <div className="w-6 flex flex-col items-center opacity-0 group-hover:opacity-100 cursor-pointer mt-1 text-gray-400">
-                    <Plus size={18} />
-                  </div>
-                  <div className="flex-1 p-4 bg-gray-50 rounded-lg border border-gray-100 text-gray-700 outline-none" contentEditable suppressContentEditableWarning>
-                    <strong>💡 핵심 기능 (Core Features)</strong><br/>
-                    • 대시보드 및 알림 시스템<br/>
-                    • 드래그 앤 드롭이 가능한 칸반 보드<br/>
-                    • 실시간 협업 에디터
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* 보드 뷰 (칸반) */}
-            {activePage === 'board' && (
+          {/* 피드백 상태 화면 (제출 후) */}
+          {step === 'feedback' && (
+            <div className="ml-12 mt-2 mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-3">
+              <AlertCircle size={18} className="text-red-400 mt-0.5 shrink-0" />
               <div>
-                <input 
-                  type="text" 
-                  defaultValue="프론트엔드 개발 칸반" 
-                  className="w-full text-4xl font-bold text-gray-900 placeholder-gray-300 focus:outline-none bg-transparent mb-8"
-                />
-                <div className="flex gap-6 overflow-x-auto pb-8">
-                  {boardColumns.map((col, idx) => (
-                    <div key={idx} className="flex-shrink-0 w-72">
-                      <div className="flex items-center justify-between mb-3 text-sm font-medium text-gray-600">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-3 h-3 rounded-sm ${idx === 0 ? 'bg-gray-300' : idx === 1 ? 'bg-blue-400' : 'bg-green-400'}`}></span>
-                          {col.title}
-                          <span className="text-gray-400">{col.tasks.length}</span>
-                        </div>
-                        <div className="flex gap-1">
-                          <Plus size={16} className="cursor-pointer hover:text-gray-900" />
-                          <MoreHorizontal size={16} className="cursor-pointer hover:text-gray-900" />
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        {col.tasks.map((task, taskIdx) => (
-                          <div key={taskIdx} className="bg-white p-3 rounded shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer group">
-                            <p className="text-sm text-gray-800">{task}</p>
-                            <div className="mt-2 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-                              <span className="text-xs text-gray-400">프론트엔드 팀</span>
-                              <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-[10px] text-blue-600">J</div>
-                            </div>
-                          </div>
-                        ))}
-                        <button className="w-full text-left text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 p-2 rounded flex items-center gap-1 transition-colors">
-                          <Plus size={16} /> 새로 만들기
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                <div className="text-red-300 font-medium text-xs mb-1">Runtime Error (Line 2)</div>
+                <div className="text-gray-300 text-xs font-sans">
+                  `validate` 함수가 정의되지 않았습니다. 헬퍼 함수를 내부에 선언하거나 올바른 스코프에서 호출하고 있는지 확인해 보세요. 💡
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* 코드 라인 3 */}
+          <div className="flex hover:bg-[#2d2d2d] py-1">
+            <div className="w-8 text-right pr-4 text-gray-600 select-none">3</div>
+            <div className="text-gray-300">{"}"}</div>
+          </div>
+        </div>
+
+        {/* 하단 액션 바 (Pre-flight Check & Submit) */}
+        <div className="h-16 bg-[#161b22] border-t border-gray-800 flex items-center justify-between px-6">
+          <div className="flex items-center gap-4">
+            {step === 'checking' && (
+              <div className="flex items-center gap-2 text-sm text-blue-400 animate-pulse">
+                <Clock size={16} className="animate-spin" />
+                <span>Pre-flight 점검 중... (문법 및 필수 파일 확인)</span>
+              </div>
+            )}
+            {step === 'feedback' && (
+              <div className="flex items-center gap-2 text-sm text-red-400">
+                <AlertCircle size={16} />
+                <span>테스트 케이스 3개 중 1개 통과</span>
               </div>
             )}
           </div>
+          
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setStep('editing')}
+              className="px-4 py-2 rounded text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors flex items-center gap-2"
+            >
+              <Play size={16} />
+              테스트 실행
+            </button>
+            <button 
+              onClick={handleSubmit}
+              disabled={step === 'checking'}
+              className="px-6 py-2 rounded text-sm font-medium bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+            >
+              <Send size={16} />
+              {step === 'feedback' ? '코드 수정 후 재제출' : '최종 제출'}
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
   );
 };
 
-export default NotionClone;
+export default CodingAssignmentUI;
